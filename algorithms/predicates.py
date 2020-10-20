@@ -1,12 +1,17 @@
-from algorithms.primitives import Point
+from algorithms.primitives import Point, LineSegment
 
 
-def turn_value(a: Point, b: Point, c: Point) -> float:
-    def cross(p1: Point, p2: Point):
-        return p1.x * p2.y - p2.x * p1.y
+def cross_product(u, v):
+    return u.x * v.y - u.y * v.x
 
-    determinant = cross(b - a, c - a)
-    return determinant
+
+def points_turn_value(a: Point, b: Point, c: Point) -> float:
+    return cross_product(b - a, c - a)
+
+
+def line_segments_turn_value(l1: LineSegment, l2: LineSegment) -> float:
+    return cross_product(l1.p2 - l1.p1, l2.p2 - l2.p1)
+
 
 
 def turn(a: Point, b: Point, c: Point) -> int:
@@ -19,11 +24,11 @@ def turn(a: Point, b: Point, c: Point) -> int:
     References: https://habr.com/ru/post/138168/
     """
 
-    determinant = turn_value(a, b, c)
+    turn_value = points_turn_value(a, b, c)
     
-    if determinant > 0:
+    if turn_value > 0:
         return 1  # left
-    elif determinant < 0:
+    elif turn_value < 0:
         return -1  # right
     else:
         return 0

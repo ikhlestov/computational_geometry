@@ -1,7 +1,7 @@
 import math
 from collections import namedtuple
 
-from algorithms.predicates import turn, turn_value
+from algorithms.predicates import turn, line_segments_turn_value
 from algorithms.primitives import Point, LineSegment
 
 
@@ -61,8 +61,8 @@ def lines_segment_intersection(l1: LineSegment, l2: LineSegment):
 def lines_segment_intersection_point(l1: LineSegment, l2: LineSegment):
     if not lines_segment_intersection(l1, l2):
         return None
-    z_1 = turn_value(l1.p1, l1.p2, l2.p1)
-    z_2 = turn_value(l1.p1, l1.p2, l2.p2)
+    z_1 = line_segments_turn_value(LineSegment(l1.p1, l1.p2), LineSegment(l1.p1, l2.p1))
+    z_2 = line_segments_turn_value(LineSegment(l1.p1, l1.p2), LineSegment(l1.p1, l2.p2))
     try:
         fraction = abs(z_1 / (z_2 - z_1))
     # edge case with parallel lines were detected

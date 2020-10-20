@@ -33,12 +33,6 @@ class LineSegment:
             (self.p1 == other.p2 and self.p2 == other.p1)
         )
 
-    def __matmul__(self, other):
-        a = self.p1
-        b = self.p2
-        c = other.p2
-        return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x)
-
 
 # TODO: google two constructors in python
 def line_segment_from_coordinates(p1_x, p1_y, p2_x, p2_y):
