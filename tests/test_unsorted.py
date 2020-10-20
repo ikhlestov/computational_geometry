@@ -1,14 +1,9 @@
 import pytest
 
-from algorithms import lines_segment_intersection, point_belongs_to_line
+from algorithms import lines_segment_intersection, point_belongs_to_line, \
+    lines_segment_intersection_point
 from algorithms.primitives import line_segment_from_coordinates, Point
 
-
-# lines_segment_intersection tests
-# 5, 0
-# 10, 3
-# 15, 6
-# 20, 9
 
 def test_lines_segment_intersection_positive_case():
     l1 = line_segment_from_coordinates(0, 0, 10, 10)
@@ -65,7 +60,44 @@ def test_lines_segment_intersection_edge_case_e():
     assert lines_segment_intersection(l2, l1)
 
 
-# point_belongs_to_line_segment tests
+# lines_segment_intersection_point tests
+def test_lines_segment_intersection_point_case_1():
+    l1 = line_segment_from_coordinates(0, 0, 10, 10)
+    l2 = line_segment_from_coordinates(0, 10, 10, 0)
+    assert (5, 5) == lines_segment_intersection_point(l1, l2)
+    assert (5, 5) == lines_segment_intersection_point(l2, l1)
+
+
+def test_lines_segment_intersection_point_case_2():
+    l1 = line_segment_from_coordinates(0, 0, 8, 4)
+    l2 = line_segment_from_coordinates(0, 6, 12, 0)
+    assert (6, 3) == lines_segment_intersection_point(l1, l2)
+    assert (6, 3) == lines_segment_intersection_point(l2, l1)
+
+
+def test_lines_segment_intersection_point_case_3():
+    l1 = line_segment_from_coordinates(5, 0, 20, 9)
+    l2 = line_segment_from_coordinates(10, 3, 15, 6)
+    assert None == lines_segment_intersection_point(l1, l2)
+    assert None == lines_segment_intersection_point(l2, l1)
+
+
+def test_lines_segment_intersection_point_case_4():
+    l1 = line_segment_from_coordinates(5, 0, 10, 3)
+    l2 = line_segment_from_coordinates(20, 9, 15, 6)
+    assert None == lines_segment_intersection_point(l1, l2)
+    assert None == lines_segment_intersection_point(l2, l1)
+
+
+def test_lines_segment_intersection_point_case_5():
+    """Case when one point from line segment L2 lies on line segment L2"""
+    l1 = line_segment_from_coordinates(10, 10, 20, 10)
+    l2 = line_segment_from_coordinates(15, 10, 40, 40)
+    assert (15, 10) == lines_segment_intersection_point(l1, l2)
+    assert (15, 10) == lines_segment_intersection_point(l2, l1)
+
+
+# point_belongs_to_line tests
 def test_point_belongs_to_line_positive():
     l1 = line_segment_from_coordinates(5, 0, 15, 6)
     p1 = Point(10, 3)

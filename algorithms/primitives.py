@@ -33,12 +33,11 @@ class LineSegment:
             (self.p1 == other.p2 and self.p2 == other.p1)
         )
 
-    # def __mul__(self, other):
-    #     # (bx - ax) * (cy - ay) - (by - ay) * (cx - ax)
-    #     # ax = self.p1
-    #     a = self.p1
-    #     b = self.p2
-    #     c = other.p2
+    def __matmul__(self, other):
+        a = self.p1
+        b = self.p2
+        c = other.p2
+        return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x)
 
 
 # TODO: google two constructors in python
