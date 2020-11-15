@@ -1,7 +1,7 @@
 import pytest
 
 from algorithms import lines_segment_intersection, point_belongs_to_line, \
-    lines_segment_intersection_point
+    lines_segment_intersection_point, point_belongs_to_a_polygon
 from algorithms.primitives import line_segment_from_coordinates, Point
 
 
@@ -125,3 +125,51 @@ def test_point_belongs_to_line_negative():
     l3 = line_segment_from_coordinates(0, 0, 0, 10)
     p3 = Point(1, 10)
     assert not point_belongs_to_line(l3, p3)
+
+
+# point_belongs_to_a_polygon
+def test_point_belongs_to_a_polygon_true():
+    polygon = [
+        Point(0, 0),
+        Point(0, 10),
+        Point(10, 10),
+        Point(10, 0)
+    ]
+    
+    # point exist inside tha polygon
+    p1 = Point(5, 5)
+    assert point_belongs_to_a_polygon(p1, polygon)
+
+    # point belongs to a polygon edge
+    p2 = Point(0, 5)
+    assert point_belongs_to_a_polygon(p2, polygon)
+
+    # point is the same as on of polygon edges
+    p3 = Point(10, 10)
+    assert point_belongs_to_a_polygon(p3, polygon)
+
+
+def test_point_belongs_to_a_polygon_false():
+    """
+    _________
+    |  /\\  |
+    | /  \\ |
+    |/    \\|
+    """
+    polygon = [
+        Point(0, 0),
+        Point(0, 10),
+        Point(10, 10),
+        Point(10, 0),
+        Point(5, 9),
+    ]
+
+    # point lies on "inside" concave part of polygon
+    p1 = Point(5, 5)
+    assert not point_belongs_to_a_polygon(p1, polygon)
+
+    p2 = Point(5, 0)
+    assert not point_belongs_to_a_polygon(p2, polygon)
+
+    p3 = Point(12, 0)
+    assert not point_belongs_to_a_polygon(p3, polygon)

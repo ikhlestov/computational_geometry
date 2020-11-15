@@ -1,5 +1,7 @@
 import math
+import sys
 from collections import namedtuple
+from typing import List
 
 from algorithms.predicates import turn, line_segments_turn_value
 from algorithms.primitives import Point, LineSegment
@@ -93,3 +95,25 @@ def point_belongs_to_line(line_segm: LineSegment, point: Point):
     c = line_segm.p1.y - k * line_segm.p1.x;
 
     return point.y == point.x * k + c
+
+
+def point_belongs_to_a_polygon(z_point: Point, polygon: List[Point]):
+    # just a sanity check for the easiest case
+    for polygon_point in polygon:
+        if polygon_point == z_point:
+            return True  # test point the same as a polygon point
+
+    # check intersection of each polygon edge and point-infinity line
+    distant_coordinate = int(sys.maxsize ** .5 / 1000)
+    point_ray = LineSegment(z_point, Point(distant_coordinate, z_point.y))
+    # identify intersection point for each edge
+    intersected_points = []
+    for idx in range(len(polygon)):
+        next_idx = (idx + 1) % len(polygon)
+        edge = LineSegment(polygon[idx], polygon[next_idx])
+        intersection_point = lines_segment_intersection_point(point_ray, edge)
+        if intersection_point:
+            if Point(*intersection_point) == z_point:
+                return True
+            intersected_points.append(intersection_point)
+    return len(intersected_points) % 2
