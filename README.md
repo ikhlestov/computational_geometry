@@ -8,7 +8,7 @@ In general, to start the project you should:
 
 - Clone the repository with `git clone https://github.com/ikhlestov/computational_geometry.git`
 - Enter the directory `cd computational_geometry/`
-- Start the code with `python3 main.py`
+- Start the code with `python3 labXX.py`, where XX is a desired number
 
 After you can use mouse to plot two lines on canvas and identify do they intersects or not.
 

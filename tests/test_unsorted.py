@@ -129,6 +129,14 @@ def test_point_belongs_to_line_negative():
 
 # point_belongs_to_a_polygon
 def test_point_belongs_to_a_polygon_true():
+    """
+    _________
+    |       |
+    |       |
+    |       |
+    |       |
+    ---------
+    """
     polygon = [
         Point(0, 0),
         Point(0, 10),
