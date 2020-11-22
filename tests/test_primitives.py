@@ -1,6 +1,6 @@
 import pytest
 
-from algorithms.primitives import Point, LineSegment, line_segment_from_coordinates
+from algorithms.primitives import Point, LineSegment, Vector, line_segment_from_coordinates
 
 
 ### Points
@@ -49,9 +49,36 @@ def test_line_segment_impossible_to_create():
         LineSegment(p1, p1)
 
 
+### Vectors
+def test_vectors_properties():
+    Vector(Point(10, 0), Point(0, 0)).len == 10
+    Vector(Point(0, 10), Point(0, 0)).len == 10
+    Vector(Point(0, 0), Point(10, 0)).len == 10
+    Vector(Point(0, 0), Point(0, 10)).len == 10
+    Vector(Point(0, 0), Point(3, 4)).len == 5
+    Vector(Point(1, 2), Point(4, 6)).len == 5
+
+
+def test_vector_angle():
+    v1 = Vector(Point(0, 0), Point(0, 10))
+    v2 = Vector(Point(0, 0), Point(20, 0))
+    assert v1.angle(v2) == 90
+
+    v2 = Vector(Point(0, 0), Point(0, -10))
+    assert v1.angle(v2) == 180
+
+    v2 = Vector(Point(0, 0), Point(-10, 0))
+    assert v1.angle(v2) == 90  # even it should be 270
+
+    v2 = Vector(Point(0, 0), Point(0, 10))
+    assert v1.angle(v2) == 0
+
+
 ### Helper methods
 def test_line_segment_from_coordinates():
     p1_x, p1_y, p2_x, p2_y = list(range(1, 5))
     line_1 = line_segment_from_coordinates(p1_x, p1_y, p2_x, p2_y)
     line_2 = LineSegment(Point(x=p1_x, y=p1_y), Point(x=p2_x, y=p2_y))
     assert line_1 == line_2
+
+

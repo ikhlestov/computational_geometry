@@ -1,7 +1,7 @@
 import pytest
 
 from algorithms import lines_segment_intersection, point_belongs_to_line, \
-    lines_segment_intersection_point, point_belongs_to_a_polygon
+    lines_segment_intersection_point, point_belongs_to_a_polygon, polar_angle, PointsPolygonChecker
 from algorithms.primitives import line_segment_from_coordinates, Point
 
 
@@ -181,3 +181,61 @@ def test_point_belongs_to_a_polygon_false():
 
     p3 = Point(12, 0)
     assert not point_belongs_to_a_polygon(p3, polygon)
+
+
+# points belongs to a polygon check, multi requests
+def test_PointsPolygonChecker_true():
+    """
+    _________
+    |       |
+    |       |
+    |       |
+    |       |
+    ---------
+    """
+    points_polygon_checker = PointsPolygonChecker([
+        Point(0, 0),
+        Point(10, 0),
+        Point(10, 10),
+        Point(0, 10),
+    ])
+
+    # point exist inside tha polygon
+    assert points_polygon_checker(Point(5, 5))
+
+    # point belongs to a polygon edge
+    assert points_polygon_checker(Point(0, 5))
+
+    # point is the same as on of polygon edges
+    assert points_polygon_checker(Point(10, 10))
+
+
+def test_PointsPolygonChecker_false():
+    """
+    _________
+    |       |
+    |       |
+    |       |
+    |       |
+    ---------
+    """
+    points_polygon_checker = PointsPolygonChecker([
+        Point(0, 0),
+        Point(10, 0),
+        Point(10, 10),
+        Point(0, 10),
+    ])
+
+    # point lies on "inside" concave part of polygon
+    assert not points_polygon_checker(Point(11, 11))
+
+    assert not points_polygon_checker(Point(5, 43))
+
+    assert not points_polygon_checker(Point(12, 0))
+
+
+
+def test_polar_angle():
+    ans1 = polar_angle(Point(0, 0), Point(-1, -1))
+    ans2 = polar_angle(Point(1, 1), Point(0, 0))
+    assert ans1 == ans2 == pytest.approx(-2.356194490192345)

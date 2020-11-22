@@ -1,3 +1,6 @@
+import math
+
+
 class Point:
     """Class to represent regular 2D point"""
     def __init__(self, x: float, y: float):
@@ -16,6 +19,9 @@ class Point:
     def __neg__(self):
         return Point(-self.x, -self.y)
 
+    def __repr__(self):
+        return "Point({:.2f}, {:.2f})".format(self.x, self.y)
+
 
 class LineSegment:
     """Class to represent 2D line segment passing through two points"""
@@ -32,6 +38,28 @@ class LineSegment:
             (self.p1 == other.p1 and self.p2 == other.p2) or
             (self.p1 == other.p2 and self.p2 == other.p1)
         )
+
+
+class Vector(LineSegment):
+    def __init__(self, start: Point, end: Point):
+        self.start = start
+        self.end = end
+        self.x = end.x - start.x
+        self.y = end.y - start.y
+
+    def cos(self, other):
+        scalar = self.scalar(other)
+        return scalar / (self.len * other.len)
+
+    def scalar(self, other):
+        return self.x * other.x + self.y * other.y
+
+    def angle(self, other):
+        return math.degrees(math.acos(self.cos(other)))
+
+    @property
+    def len(self):
+        return (self.x ** 2 + self.y ** 2) ** .5
 
 
 # TODO: google two constructors in python

@@ -1,5 +1,6 @@
 import math
 import sys
+import bisect
 from collections import namedtuple
 from typing import List
 
@@ -117,3 +118,55 @@ def point_belongs_to_a_polygon(z_point: Point, polygon: List[Point]):
                 return True
             intersected_points.append(intersection_point)
     return len(intersected_points) % 2
+
+
+def get_triangle_centroid(p1: Point, p2: Point, p3: Point):
+    centroid_x = (p1.x + p2.x + p3.x) / 3
+    centroid_y = (p1.y + p2.y + p3.y) / 3
+    return Point(centroid_x, centroid_y)
+
+
+def polar_angle(p1: Point, p2: Point):
+    """Get polar angle between two points(p1 is origin) and imaginary axis"""
+    # "shift" everyting to 0
+    x = p2.x - p1.x
+    y = p2.y - p1.y
+    return math.atan2(y, x)
+
+
+class PointsPolygonChecker:
+    """Check if point belong to a polygon or not in O(log(n)) time"""
+    def __init__(self, polygon: List[Point]):
+        """Pre-process polygon vertices to be able faster answer to a query.
+
+        Note: We assume that polygon vertices were provided in
+        left-order direction
+
+        Complexity: O(n)
+        """
+        if len(polygon) < 3:
+            raise ValueError("Cannot process polygon with less than 3 vertices")
+        self.centroid = get_triangle_centroid(*polygon[:3])
+        # Here we sort vertices according to an angle, not as a regular counterclockwise direction
+        angles_to_vertex = sorted(
+            [(polar_angle(self.centroid, vertex), vertex) for vertex in polygon]
+        )
+        self.angles = [item[0] for item in angles_to_vertex]
+        self.vertices = [item[1] for item in angles_to_vertex]
+
+    def __call__(self, z: Point):
+        """Check if z belongs to a polygon"""
+        z_angle = polar_angle(self.centroid, z)
+        sector_right_idx = bisect.bisect(self.angles, z_angle)
+        # if we meet edge for bisect search - take next round element
+        if not sector_right_idx or sector_right_idx == len(self.angles):
+            sector_left_idx = len(self.angles) - 1
+            sector_right_idx = 0
+        else:
+            sector_left_idx = sector_right_idx - 1
+        sector_point_right = self.vertices[sector_right_idx]
+        sector_point_left = self.vertices[sector_left_idx]
+        turn_ = turn(sector_point_left, sector_point_right, z)
+        if turn_ == -1:
+            return False
+        return True
