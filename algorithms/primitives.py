@@ -22,6 +22,12 @@ class Point:
     def __repr__(self):
         return "Point({:.2f}, {:.2f})".format(self.x, self.y)
 
+    def __lt__(self, other):
+        if self.x != other.x:
+            return self.x < other.x
+        else:
+            return self.y < other.y
+
 
 class LineSegment:
     """Class to represent 2D line segment passing through two points"""
@@ -55,7 +61,8 @@ class Vector(LineSegment):
         return self.x * other.x + self.y * other.y
 
     def angle(self, other):
-        return math.degrees(math.acos(self.cos(other)))
+        # return math.degrees(math.acos(self.cos(other)))
+        return math.acos(self.cos(other))
 
     @property
     def len(self):

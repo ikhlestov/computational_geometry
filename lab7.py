@@ -28,9 +28,15 @@ class ObjectsHandler:
     def build_convex_hull_event(self, event):
         if len(self.ploted_points) <= 2:
             self.answer_label['text'] = "Failed to build convex hull with less than 3 points"
-        convex_hull_points_pairs = graham_ch(self.ploted_points)
+        convex_hull_points_pairs, debug = graham_ch(self.ploted_points)
         for pair in convex_hull_points_pairs:
             self.plot_line(pair[0], pair[1])
+        for idx, point in enumerate(debug):
+            self.add_text(point.x + 10, point.y + 10, text='%d' % idx)
+
+    def add_text(self, x, y, text, fill="darkblue", font="Times 20 bold"):
+        text = self.canvas.create_text(x, y, text=text, fill="darkblue", font="Times 20 bold")
+        self.drawed_objects.append(text)
 
     def plot_line(self, point_1, point_2, color='black'):
         line_id = self.canvas.create_line(
